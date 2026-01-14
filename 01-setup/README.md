@@ -9,8 +9,6 @@
 ### □ 1단계: 프로젝트 생성
 
 ```bash
-mkdir my-blog-api
-cd my-blog-api
 npm init -y
 ```
 
@@ -57,27 +55,24 @@ npm install -D nodemon prisma eslint prettier @eslint/js
 **eslint.config.js 생성:**
 
 ```javascript
-import js from "@eslint/js";
+import js from '@eslint/js';
 
 export default [
   js.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2024,
-      sourceType: "module",
+      sourceType: 'module',
       globals: {
-        console: "readonly",
-        process: "readonly",
+        console: 'readonly',
+        process: 'readonly',
       },
     },
     rules: {
-      "no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_" },
-      ],
-      "no-console": "off",
-      "prefer-const": "error",
-      "no-var": "error",
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-console': 'off',
+      'prefer-const': 'error',
+      'no-var': 'error',
     },
   },
 ];
@@ -99,9 +94,10 @@ export default [
 
 ### □ 4단계: PostgreSQL 데이터베이스 생성
 
-- Window면  작업 표시 줄에 “psql”검색, "SQL Shell(psql)" 오픈
+- Window면 작업 표시 줄에 “psql”검색, "SQL Shell(psql)" 오픈
 
 - MacOS는 아래로 진행
+
 ```bash
 psql
 ```
@@ -176,17 +172,13 @@ generated/
 **src/config/config.js 생성:**
 
 ```javascript
-import { z } from "zod";
+import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
-  PORT: z.coerce
-    .number()
-    .min(1000)
-    .max(65535)
-    .default(5001),
+    .enum(['development', 'production', 'test'])
+    .default('development'),
+  PORT: z.coerce.number().min(1000).max(65535).default(5001),
   DATABASE_URL: z.url(),
 });
 
@@ -199,7 +191,7 @@ const parseEnvironment = () => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("환경 변수 검증 실패:", error.errors);
+      console.error('환경 변수 검증 실패:', error.errors);
     }
     process.exit(1);
   }
@@ -207,11 +199,9 @@ const parseEnvironment = () => {
 
 export const config = parseEnvironment();
 
-export const isDevelopment =
-  config.NODE_ENV === "development";
-export const isProduction =
-  config.NODE_ENV === "production";
-export const isTest = config.NODE_ENV === "test";
+export const isDevelopment = config.NODE_ENV === 'development';
+export const isProduction = config.NODE_ENV === 'production';
+export const isTest = config.NODE_ENV === 'test';
 ```
 
 ---
@@ -221,15 +211,15 @@ export const isTest = config.NODE_ENV === "test";
 **prisma.config.js 생성:**
 
 ```javascript
-import { defineConfig, env } from "prisma/config";
+import { defineConfig, env } from 'prisma/config';
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: 'prisma/schema.prisma',
   migrations: {
-    path: "prisma/migrations",
+    path: 'prisma/migrations',
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    url: env('DATABASE_URL'),
   },
 });
 ```
@@ -260,9 +250,9 @@ export default defineConfig({
 **src/db/prisma.js 생성:**
 
 ```javascript
-import { PrismaClient } from "#generated/prisma/client.ts";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { config } from "#config";
+import { PrismaClient } from '#generated/prisma/client.ts';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { config } from '#config';
 
 const adapter = new PrismaPg({
   connectionString: config.DATABASE_URL,
@@ -278,16 +268,16 @@ export const prisma = new PrismaClient({ adapter });
 **src/server.js 생성:**
 
 ```javascript
-import express from "express";
-import { prisma } from "#db/prisma.js";
-import { config } from "#config";
+import express from 'express';
+import { prisma } from '#db/prisma.js';
+import { config } from '#config';
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, Prisma!");
+app.get('/', (req, res) => {
+  res.send('Hello, Prisma!');
 });
 
 app.listen(config.PORT, () => {
@@ -296,7 +286,7 @@ app.listen(config.PORT, () => {
   );
 });
 
-process.on("SIGINT", async () => {
+process.on('SIGINT', async () => {
   await prisma.$disconnect();
   process.exit(0);
 });
