@@ -9,7 +9,7 @@ const app = express();
 // JSON 파싱
 app.use(express.json());
 
-// 쿠키 파싱 (중요!)
+//! 쿠키 파싱 (중요!)
 app.use(cookieParser());
 
 // API 라우터 등록

@@ -22,12 +22,14 @@ export const generateRefreshToken = (user) => {
   });
 };
 
+
 // Access Token + Refresh Token 동시 생성
 export const generateTokens = (user) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
   return { accessToken, refreshToken };
 };
+
 
 // 토큰 검증
 export const verifyToken = (token, tokenType = 'access') => {
