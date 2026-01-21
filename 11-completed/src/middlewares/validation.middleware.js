@@ -31,7 +31,7 @@ export const validate = (target, schema) => {
         );
       }
 
-      Object.assign(req[target], result.data);
+      req[target] = result.data;
       next();
     } catch (error) {
       next(error);
